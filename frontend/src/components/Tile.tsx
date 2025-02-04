@@ -5,7 +5,7 @@ interface TileProps {
   state: string
 }
 
-const Tile: React.FC<TileProps> = ({ letter, state }) => {
+const Tile = ({ letter, state }: TileProps) => {
   const [animate, setAnimate] = useState(false)
 
   useEffect(() => {

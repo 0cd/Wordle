@@ -2,7 +2,7 @@ interface GameOverProps {
   message: string
 }
 
-const GameOver: React.FC<GameOverProps> = ({ message }) => {
+const GameOver = ({ message }: GameOverProps) => {
   return (
     <div className='modal-overlay'>
       <div className='modal-content'>
