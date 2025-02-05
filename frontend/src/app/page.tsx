@@ -1,17 +1,15 @@
 'use client'
 import GameOver from '@/components/GameOver'
 import Grid from '@/components/Grid'
-import { getTodayWord, Word } from '@/services/wordService'
+import useWordle from '@/hooks/useWordle'
+import { getTodayWord } from '@/services/wordService'
+import { Word } from '@/types'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
-  const [currentGuess, setCurrentGuess] = useState<string>('')
-  const [guesses, setGuesses] = useState<string[]>([])
-  const [activeRow, setActiveRow] = useState<number>(0)
   const [solution, setSolution] = useState<Word>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isGameOver, setIsGameOver] = useState<boolean>(false)
-  const [message, setMessage] = useState<string>('')
+  const { currentGuess, guesses, activeRow, isGameOver, gameState, handleKeydown } = useWordle(solution)
 
   useEffect(() => {
     getTodayWord().then((word) => {
@@ -23,47 +21,9 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (isGameOver) return
-
-      if (e.key === 'Backspace') {
-        setCurrentGuess((prev) => prev.slice(0, -1))
-        return
-      }
-
-      if (e.key === 'Enter' && currentGuess.length === 5) {
-        setGuesses((prev) => {
-          const newGuesses = [...prev]
-          newGuesses[activeRow] = currentGuess
-          return newGuesses
-        })
-
-        if (currentGuess === solution?.word.toUpperCase()) {
-          setMessage('You win!')
-          setIsGameOver(true)
-        }
-
-        if (activeRow === 5) {
-          setMessage('You lose!')
-          setIsGameOver(true)
-        }
-
-        setActiveRow((prev) => prev + 1)
-        setCurrentGuess('')
-        return
-      }
-
-      if (currentGuess.length >= 5) return
-
-      const key = e.key.toUpperCase()
-      if (/^[A-Z]$/.test(key)) {
-        setCurrentGuess((prev) => prev + key)
-      }
-    }
-
     window.addEventListener('keydown', handleKeydown)
     return () => window.removeEventListener('keydown', handleKeydown)
-  }, [currentGuess, activeRow, isGameOver, solution])
+  }, [handleKeydown, currentGuess, isGameOver])
 
   return (
     <div className='h-screen flex flex-col items-center justify-center font-[family-name:var(--font-geist-mono)]'>
@@ -73,12 +33,8 @@ export default function Home() {
           knockoff
         </span>
       </div>
-      {isGameOver && <GameOver message={message} />}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <Grid currentGuess={currentGuess} guesses={guesses} activeRow={activeRow} solution={solution?.word} />
-      )}
+      {isGameOver && <GameOver gameState={gameState} />}
+      {isLoading ? <div>Loading...</div> : <Grid currentGuess={currentGuess} guesses={guesses} activeRow={activeRow} />}
     </div>
   )
 }

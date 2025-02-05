@@ -1,10 +1,6 @@
 import axios from 'axios'
 
-export type Word = {
-  word: string
-  definition: string
-  id: string
-}
+import { Word } from '@/types'
 
 const url = 'http://localhost:3000/api/v1'
 
