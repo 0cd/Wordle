@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Word, Tile } from '@/types'
+import { formatGuess } from '@/utils'
 
 // creates an empty 5x6 grid
 const createInitialGuesses = (): Tile[][] =>
@@ -12,18 +13,10 @@ const useWordle = (solution?: Word) => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
   const [gameState, setGameState] = useState<number>(0) // 0: playing, 1: win, 2: lose
 
-  const formatGuess = (): Tile[] => {
-    return currentGuess
-      .toUpperCase()
-      .padEnd(5, ' ')
-      .split('')
-      .map((letter) => ({ letter, state: 'empty' }))
-  }
-
   const getTileState = () => {
     if (!solution || activeRow >= guesses.length) return
 
-    const formattedGuess = formatGuess()
+    const formattedGuess = formatGuess(currentGuess)
     const solutionArray = solution?.word.toUpperCase().split('')
     const solutionLetterCounts: Record<string, number> = {}
 
@@ -72,12 +65,12 @@ const useWordle = (solution?: Word) => {
     if (e.key === 'Enter' && currentGuess.length === 5) {
       getTileState()
 
-      if (currentGuess.toUpperCase() === solution?.word.toUpperCase()) {
+      if (currentGuess === solution?.word.toUpperCase()) {
         setGameState(1)
         setIsGameOver(true)
       }
 
-      if (activeRow === 5 && currentGuess.toUpperCase() !== solution?.word.toUpperCase()) {
+      if (activeRow === 5 && currentGuess !== solution?.word.toUpperCase()) {
         setGameState(2)
         setIsGameOver(true)
       }

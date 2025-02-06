@@ -7,7 +7,7 @@ interface RowProps {
 
 const Row = ({ guess }: RowProps) => {
   return (
-    <div role='row' className='row grid grid-cols-5' style={{ width: '300px' }}>
+    <div role='row' className='row flex flex-row gap-1 w-300'>
       {guess.map((tile, index) => (
         <Tile key={index} letter={tile.letter} state={tile.state} />
       ))}

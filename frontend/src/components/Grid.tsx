@@ -1,5 +1,6 @@
 import Row from './Row'
 import { Tile as TileType } from '@/types'
+import { formatGuess } from '@/utils'
 
 interface GridProps {
   currentGuess: string
@@ -9,19 +10,9 @@ interface GridProps {
 
 const Grid = ({ currentGuess, guesses, activeRow }: GridProps) => {
   return (
-    <div role='grid' className='grid gap-1' style={{ height: '360px' }}>
+    <div role='grid' className='flex flex-col gap-1 h-360'>
       {guesses.map((guess, index) => (
-        <Row
-          key={index}
-          guess={
-            index === activeRow
-              ? currentGuess
-                  .padEnd(5, ' ')
-                  .split('')
-                  .map((letter) => ({ letter, state: 'empty' }))
-              : guess
-          }
-        />
+        <Row key={index} guess={index === activeRow ? formatGuess(currentGuess) : guess} />
       ))}
     </div>
   )
