@@ -10,7 +10,7 @@ const useWordle = (solution?: Word) => {
   const [currentGuess, setCurrentGuess] = useState<string>('')
   const [guesses, setGuesses] = useState<Tile[][]>(createInitialGuesses)
   const [activeRow, setActiveRow] = useState<number>(0)
-  const [isGameOver, setIsGameOver] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>(false)
   const [gameState, setGameState] = useState<number>(0) // 0: playing, 1: win, 2: lose
 
   const getTileState = () => {
@@ -53,7 +53,7 @@ const useWordle = (solution?: Word) => {
   }
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (isGameOver) return
+    if (gameState === 1 || gameState === 2) return
 
     if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return
 
@@ -67,12 +67,12 @@ const useWordle = (solution?: Word) => {
 
       if (currentGuess === solution?.word.toUpperCase()) {
         setGameState(1)
-        setIsGameOver(true)
+        setShowModal(true)
       }
 
       if (activeRow === 5 && currentGuess !== solution?.word.toUpperCase()) {
         setGameState(2)
-        setIsGameOver(true)
+        setShowModal(true)
       }
 
       setActiveRow((prev) => prev + 1)
@@ -88,7 +88,7 @@ const useWordle = (solution?: Word) => {
     }
   }
 
-  return { currentGuess, guesses, activeRow, isGameOver, gameState, handleKeydown }
+  return { currentGuess, guesses, activeRow, showModal, setShowModal, gameState, handleKeydown }
 }
 
 export default useWordle

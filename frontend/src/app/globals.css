@@ -93,12 +93,12 @@ body {
 
 .modal-content {
   background: theme('colors.zinc.900');
-  padding: 1.5rem;
+  width: 400px;
+  padding: 1rem;
   border-radius: 10px;
   border: 1px solid theme('colors.zinc.800');
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
-  text-align: center;
 }
 
 @keyframes fadeIn {
